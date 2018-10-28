@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+这个爬虫用来抓取boss中的列表页面以及详情页面=
+"""
 
 import logging
 import random
@@ -17,7 +20,7 @@ date_format = '%Y-%m-%d %H:%M:%S'
 
 city_ids = {101010100: u"北京"}
 key_words = ["实习"]
-list_url_tem = "https://www.zhipin.com/job_detail/?query={kw}&page={pg}&ka=page-{pg1}"
+list_url_tem = "https://www.zhipin.com/c101010100/?query={kw}&page={pg}&ka=page-{pg1}"
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari/537.36",
 }
@@ -58,13 +61,13 @@ class ZhiPin(Spider):
             yield Request(url=detail_url, callback=self.parse_detail, priority=1,
                           meta=response.meta, headers={"X-Forward-For": random_ip()})
 
-        # if pg < 10:
-        #     pg = pg + 1
-        #     next_url = list_url_tem.format(kw=quote_plus(kw), cid=cid, pg=pg)
-        #     logger.info("will crawl url {}".format(next_url))
-        #     yield Request(url=next_url, callback=self.parse_list, priority=6,
-        #                   meta={"city": city, "kw": kw, "cid": cid, "pg": pg},
-        #                   headers={"X-Forward-For": random_ip()})
+            # if pg < 10:
+            #     pg = pg + 1
+            #     next_url = list_url_tem.format(kw=quote_plus(kw), cid=cid, pg=pg)
+            #     logger.info("will crawl url {}".format(next_url))
+            #     yield Request(url=next_url, callback=self.parse_list, priority=6,
+            #                   meta={"city": city, "kw": kw, "cid": cid, "pg": pg},
+            #                   headers={"X-Forward-For": random_ip()})
 
     def parse_detail(self, response):
         logger.info("job detail url {}".format(response.url))
