@@ -39,7 +39,7 @@ class Job(BaseModel):
     job_edu = peewee.CharField(null=True)
     publish_man = peewee.CharField(null=True)
     publish_man_post = peewee.CharField(null=True)
-    publish_time = peewee.CharField(null=True)
+    publish_time = peewee.DateTimeField(null=True)
     company_name = peewee.CharField(null=True)
     company_addr = peewee.CharField(null=True)
     company_industry = peewee.CharField(null=True)

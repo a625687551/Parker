@@ -82,7 +82,7 @@ class JobPipeline(object):
             job_edu = IF(VALUES(job_edu) <> "" and (job_edu is NULL or job_edu = ""), VALUES(job_edu), job_edu),
             publish_man = IF(VALUES(publish_man) <> "" and (publish_man is NULL or publish_man = ""), VALUES(publish_man), publish_man),
             publish_man_post = IF(VALUES(publish_man_post) <> "" and (publish_man_post is NULL or publish_man_post = ""), VALUES(publish_man_post), publish_man_post),
-            publish_time =IF(VALUES(publish_time) <> "" and (publish_time is NULL or publish_time = ""), VALUES(publish_time), publish_time),
+            publish_time =VALUES(publish_time),
             company_name = IF(VALUES(company_name) <> "" and (company_name is NULL or company_name = ""), VALUES(company_name), company_name),
             company_addr = IF(VALUES(company_addr) <> "" and (company_addr is NULL or company_addr = ""), VALUES(company_addr), company_addr),
             company_industry = IF(VALUES(company_industry) <> "" and (company_industry is NULL or company_industry = ""), VALUES(company_industry), company_industry),
@@ -91,7 +91,7 @@ class JobPipeline(object):
             retain2 = IF(VALUES(retain2) <> "" and (retain2 is NULL or retain2 = ""), VALUES(retain2), retain2),
             retain3 = IF(VALUES(retain3) <> "" and (retain3 is NULL or retain3 = ""), VALUES(retain3), retain3),
             retain4 = IF(VALUES(retain4) <> "" and (retain4 is NULL or retain4 = ""), VALUES(retain4), retain4),
-            create_time = VALUES(url),
+            create_time = VALUES(create_time),
             update_time = VALUES(update_time) """
         try:
             logger.debug("Job Sql is %s, %s" % (sql, params))

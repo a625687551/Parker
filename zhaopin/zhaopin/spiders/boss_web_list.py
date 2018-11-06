@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 
 """
-这个爬虫用来抓取boss中的列表页面
+这个爬虫用来抓取boss中的列表页面,具有反爬虫x-forward无效
 """
 import logging
-import random
-import datetime
+import dateformatting
 
 from scrapy import Spider
 from scrapy import Request
 from urllib.parse import quote_plus
-
 from zhaopin.items import JobShortItem
 
 logger = logging.getLogger(__file__)
@@ -37,7 +35,7 @@ headers = {
 class ZhiPin(Spider):
     name = "boss_web_list"
     custom_settings = {
-        "DOWNLOAD_DELAY": 3,
+        "DOWNLOAD_DELAY": 5,
         "COOKIES_ENABLED": False,
         "DOWNLOAD_TIMEOUT": 15,
         "DOWNLOADER_MIDDLEWARES": {
@@ -52,7 +50,7 @@ class ZhiPin(Spider):
         for kw in key_words.keys():
             for cid, name in city_ids.items():
                 url = list_url_tem.format(kw=quote_plus(kw+"实习"), cid=cid, pg=1, pg1=1)
-                logger.info("will crawl url {}".format(url))
+                logger.info("will crawl first url {}".format(url))
                 yield Request(url=url, callback=self.parse_list,
                               meta={"city": name, "kw": kw, "cid": cid, "pg": 1},
                               headers=headers)
@@ -72,11 +70,7 @@ class ZhiPin(Spider):
             post_item["job_direction"] = key_words[kw]
             post_item["url"] = response.urljoin(cell.xpath('.//a/@href').extract_first())
             p_time = cell.xpath('.//div[@class="info-publis"]//p/text()').re_first("发布于(.*?)$")
-            if ":" in p_time:
-                post_item["publish_time"] = datetime.datetime.now().strftime(day_format)
-            else:
-                post_item["publish_time"] = "{}-{}".format(datetime.date.today().year,
-                                                           p_time.replace("月", "-").replace("日", ""))
+            post_item["publish_time"] = dateformatting.parse(p_time).strftime(date_format)
             post_item["company_name"] = cell.xpath('.//div[@class="info-company"]//a/text()').extract_first()
             post_item["company_industry"] = cell.xpath('.//div[@class="company-text"]/p/text()').extract_first()
             post_item["month_salary"] = cell.xpath(
@@ -89,13 +83,10 @@ class ZhiPin(Spider):
             logger.info("crawled list {} {}".format(post_item["url"], post_item["job_name"]))
             yield post_item
 
-            if len(content) == 30:
-                pg = pg + 1
-                next_url = list_url_tem.format(kw=quote_plus(kw+"实习"), cid=cid, pg=pg, pg1=pg)
-                logger.info("will crawl url {}".format(next_url))
-                yield Request(url=next_url, callback=self.parse_list,
-                              meta={"city": city, "kw": kw, "cid": cid, "pg": pg}, headers=headers)
+        if len(content) == 30 and pg < 10:
+            pg = pg + 1
+            next_url = list_url_tem.format(kw=quote_plus(kw+"实习"), cid=cid, pg=pg, pg1=pg)
+            logger.info("will crawl url {}".format(next_url))
+            yield Request(url=next_url, callback=self.parse_list,
+                          meta={"city": city, "kw": kw, "cid": cid, "pg": pg}, headers=headers)
 
-
-def random_ip():
-    return "201.{}.{}.{}".format(random.randrange(256), random.randrange(256), random.randrange(256))
