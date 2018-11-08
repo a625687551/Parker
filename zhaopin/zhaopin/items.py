@@ -45,7 +45,6 @@ class JobShortItem(Item):
     company_name = Field()  # 公司名字
     company_addr = Field()  # 公司区域
     company_industry = Field()  # 公司领域、行业
-    job_industry = Field()  # 公司领域、行业
     retain1 = Field()
     retain2 = Field()
     retain3 = Field()
