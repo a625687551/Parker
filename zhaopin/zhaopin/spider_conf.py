@@ -16,4 +16,7 @@ direction = {"java": 1,
              "运维": 9,
              "php": 5}
 
-key_word = {'实习'}
+key_word = '实习'
+
+date_format = '%Y-%m-%d %H:%M:%S'
+day_format = '%Y-%m-%d'

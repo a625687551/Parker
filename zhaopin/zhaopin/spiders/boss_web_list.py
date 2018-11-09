@@ -14,7 +14,7 @@ from zhaopin.items import JobShortItem
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.INFO)
 date_format = '%Y-%m-%d %H:%M:%S'
-day_format = '%Y-%m-%d'
+
 
 city_ids = {101010100: "北京",
             101020100: "上海",
