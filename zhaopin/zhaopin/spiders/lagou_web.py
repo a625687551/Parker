@@ -80,10 +80,6 @@ class LaGou(Spider):
         timeout = False
 
         content = json.loads(response.body)
-        if not content.get('content'):
-            print("debug")
-            from IPython import embed
-            embed()
 
         for cell in content['content']["positionResult"]["result"]:
             post_item = JobShortItem()
