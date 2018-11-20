@@ -52,7 +52,7 @@ class LaGou(Spider):
             # 'zhaopin.middlewares.RandomProxyMiddleware': 100,
         },
         "ITEM_PIPELINES": {
-            # 'zhaopin.pipelines.JobPipeline': 300,
+            'zhaopin.pipelines.JobPipeline': 300,
         },
     }
 
@@ -88,6 +88,9 @@ class LaGou(Spider):
                 timeout = True
                 logger.info("Timeout: %s < %s" % (date, timeout_date))
                 break
+            elif not date:
+                logger.warn("parse time badly  please check dateformatting {} ".format(time_it))
+                continue
             post_item["job_name"] = cell["positionName"]
             post_item["url"] = "https://www.lagou.com/jobs/{}.html".format(cell["positionId"])
             post_item["city"] = cell["city"]

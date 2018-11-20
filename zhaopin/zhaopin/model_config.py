@@ -12,7 +12,7 @@ peewee.mysql = pymysql
 #     pass
 
 
-config = {'host': '47.104.17.60', 'password': 'uAiqwVwjJ8-i', 'port': 3306, 'user': 'root', 'charset': 'utf8mb4'}
+config = {'host': '39.105.213.37', 'password': 'uAiqwVwjJ8-i', 'port': 3306, 'user': 'root', 'charset': 'utf8mb4'}
 database = peewee.MySQLDatabase('shixi', **config)
 
 
