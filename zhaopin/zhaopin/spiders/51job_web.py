@@ -38,7 +38,7 @@ class QianchengJob(Spider):
             # 'zhaopin.middlewares.RandomProxyMiddleware': 100,
         },
         "ITEM_PIPELINES": {
-            # 'zhaopin.pipelines.JobPipeline': 300,
+            'zhaopin.pipelines.JobPipeline': 300,
         },
     }
 
@@ -64,10 +64,8 @@ class QianchengJob(Spider):
 
         content = response.xpath('//div[@class="dw_table"]/div[@class="el"]')
         if not content.get('content'):
-            print("debug")
-            from IPython import embed
-            embed()
-
+            logger.warn("what a bad url.{}".format(response.url))
+            return
         for cell in content:
             post_item = JobShortItem()
             time_it = cell.xpath('./span[@class="t5"]/text()').extract_first()
@@ -76,6 +74,9 @@ class QianchengJob(Spider):
                 timeout = True
                 logger.info("Timeout: %s < %s" % (date, timeout_date))
                 break
+            elif not date:
+                logger.warn("parse time badly  please check dateformatting {} ".format(time_it))
+                continue
             post_item["job_name"] = cell.xpath('./p[starts-with(@class, "t1")]//a/@title').extract_first()
             post_item["url"] = cell.xpath('./p[starts-with(@class, "t1")]//a/@href').extract_first()
             post_item["city"] = city_ids[cid]

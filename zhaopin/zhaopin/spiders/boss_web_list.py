@@ -60,16 +60,26 @@ class ZhiPin(Spider):
         cid = response.meta["cid"]
         city = response.meta["city"]
         pg = response.meta["pg"]
+        timeout_date = self.timeout_date
+        timeout = False
         content = response.xpath('//div[@class="job-list"]/ul/li')
         for cell in content:
+            time_it = cell.xpath('.//div[@class="info-publis"]//p/text()').re_first("发布于(.*?)$")
+            date = dateformatting.parse(time_it)
+            if date and date < timeout_date:
+                timeout = True
+                logger.info("Timeout: %s < %s" % (date, timeout_date))
+                break
+            elif not date:
+                logger.warn("parse time badly  please check dateformatting {} ".format(time_it))
+                continue
             post_item = JobShortItem()
             post_item["city"] = response.meta["city"]
             post_item["job_name"] = cell.xpath('.//div[@class="job-title"]/text()').extract_first()
             post_item["source"] = "boss直聘"
             post_item["job_direction"] = key_words[kw]
             post_item["url"] = response.urljoin(cell.xpath('.//a/@href').extract_first())
-            p_time = cell.xpath('.//div[@class="info-publis"]//p/text()').re_first("发布于(.*?)$")
-            post_item["publish_time"] = dateformatting.parse(p_time).strftime(date_format)
+            post_item["publish_time"] = dateformatting.parse(time_it).strftime(date_format)
             post_item["company_name"] = cell.xpath('.//div[@class="info-company"]//a/text()').extract_first()
             post_item["company_industry"] = cell.xpath('.//div[@class="company-text"]/p/text()').extract_first()
             post_item["month_salary"] = cell.xpath(
@@ -82,10 +92,13 @@ class ZhiPin(Spider):
             logger.info("crawled list {} {}".format(post_item["url"], post_item["job_name"]))
             yield post_item
 
-        if len(content) == 30 and pg < 10:
+        if len(content) == 30 and pg < 10 and not timeout:
             pg = pg + 1
             next_url = list_url_tem.format(kw=quote_plus(kw+"实习"), cid=cid, pg=pg, pg1=pg)
             logger.info("will crawl url {}".format(next_url))
             yield Request(url=next_url, callback=self.parse_list,
                           meta={"city": city, "kw": kw, "cid": cid, "pg": pg}, headers=headers)
 
+    @property
+    def timeout_date(self):
+        return dateformatting.parse("10天前")
