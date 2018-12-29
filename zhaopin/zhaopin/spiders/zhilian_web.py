@@ -43,7 +43,7 @@ headers = {
 
 
 class LaGou(Spider):
-    name = "lagou_web"
+    name = "zhilian_web"
     custom_settings = {
         "DOWNLOAD_DELAY": 15,
         "COOKIES_ENABLED": False,
