@@ -73,7 +73,7 @@ class JobPipeline(object):
             job_name = VALUES(job_name),
             url = VALUES(url),
             city = VALUES(city),
-            source = VALUES(url),
+            source = VALUES(source),
             district = IF(VALUES(district) <> "" and (district is NULL or district = ""), VALUES(district), district),
             month_salary = IF(VALUES(month_salary) <> "" and (month_salary is NULL or month_salary = ""), VALUES(month_salary), month_salary),
             day_salary = IF(VALUES(day_salary) <> "" and (day_salary is NULL or day_salary = ""), VALUES(day_salary), day_salary),
