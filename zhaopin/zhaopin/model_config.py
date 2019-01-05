@@ -52,4 +52,4 @@ class Job(BaseModel):
     update_time = peewee.DateTimeField(null=True)
 
     class Meta:
-        db_table = 'job'
+        db_table = 'job_origin'

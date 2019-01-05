@@ -64,7 +64,7 @@ class QianchengJob(Spider):
 
         content = response.xpath('//div[@class="dw_table"]/div[@class="el"]')
         if not content.get('content'):
-            logger.warn("what a bad url.{}".format(response.url))
+            logger.warning("what a bad url.{}".format(response.url))
             return
         for cell in content:
             post_item = JobShortItem()
